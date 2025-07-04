@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Signup Flow</title>
+    <style>
+        /* ===== Google Fonts ===== */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+        /* ===== Base Styles ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f5f5ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ===== Signup Container ===== */
+        .signup-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo img {
+            width: 60px;
+        }
+
+        .logo h1 {
+            color: #333;
+            font-size: 24px;
+            margin-top: 10px;
+        }
+
+        /* ===== Progress Steps ===== */
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #999;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step.active {
+            background: #6c63ff;
+            color: white;
+        }
+
+        /* ===== Form Styles ===== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #6c63ff;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+            outline: none;
+        }
+
+        .form-group .error {
+            color: #ff3860;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.invalid .error {
+            display: block;
+        }
+
+        .form-group.invalid input {
+            border-color: #ff3860;
+        }
+
+        /* ===== Social Login ===== */
+        .social-login {
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .social-login p {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .social-login p::before,
+        .social-login p::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .social-login p::before {
+            left: 0;
+        }
+
+        .social-login p::after {
+            right: 0;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-btn img {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* ===== Submit Button ===== */
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #6c63ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #5a52e0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        /* ===== Login Link ===== */
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .login-link a {
+            color: #6c63ff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 480px) {
+            .signup-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <!-- Logo & Heading -->
+        <div class="logo">
+            <img src="https://via.placeholder.com/60" alt="App Logo">
+            <h1>Create Your Account</h1>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="steps">
+            <div class="step active">1</div>
+            <div class="step">2</div>
+            <div class="step">3</div>
+        </div>
+
+        <!-- Signup Form -->
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" placeholder="Enter your name" required>
+                <div class="error">Please enter your name</div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+                <div class="error">Please enter a valid email</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Create a password" required minlength="8">
+                <div class="error">Password must be at least 8 characters</div>
+            </div>
+
+            <!-- Social Login -->
+            <div class="social-login">
+                <p>Or sign up with</p>
+                <div class="social-icons">
+                    <div class="social-btn">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google">
+                    </div>
+                    <div class="social-btn">
+                        <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook">
+                    </div>
+                    <div class="social-btn">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="Apple">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn">Continue</button>
+        </form>
+
+        <!-- Login Link -->
+        <div class="login-link">
+            Already have an account? <a href="#">Log in</a>
+        </div>
+    </div>
+
+    <!-- JavaScript for Validation -->
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simple validation
+            const name = document.getElementById('name');
+            const email = document.getElementById('email');
+            const password = document.getElementById('password');
+            
+            resetErrors();
+            
+            let isValid = true;
+            
+            if (!name.value.trim()) {
+                showError(name.parentElement, 'Please enter your name');
+                isValid = false;
+            }
+            
+            if (!email.value.includes('@') || !email.value.includes('.')) {
+                showError(email.parentElement, 'Please enter a valid email');
+                isValid = false;
+            }
+            
+            if (password.value.length < 8) {
+                showError(password.parentElement, 'Password must be at least 8 characters');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                alert('Signup successful!');
+                // In a real app, you would submit to a server here
+            }
+        });
+        
+        function showError(element, message) {
+            element.classList.add('invalid');
+            element.querySelector('.error').textContent = message;
+        }
+        
+        function resetErrors() {
+            document.querySelectorAll('.form-group').forEach(group => {
+                group.classList.remove('invalid');
+            });
+        }
+    </script>
+</body>
+</html>
