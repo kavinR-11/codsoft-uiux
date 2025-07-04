@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hell's Kitchen | Menu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== RESET & BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #ff3e3e; /* Hell's Red */
+            --primary-dark: #cc0000;
+            --secondary: #222222;
+            --accent: #ffcc00; /* Gold */
+            --dark-bg: #121212;
+            --darker-bg: #0a0a0a;
+            --card-bg: #1e1e1e;
+            --text: #f0f0f0;
+            --text-light: #aaaaaa;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)), 
+                        url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            margin-bottom: 1.5rem;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .logo h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+            font-family: 'Times New Roman', serif;
+        }
+
+        .logo p {
+            font-size: 1.2rem;
+            color: var(--accent);
+            letter-spacing: 2px;
+        }
+
+        /* ===== NAVIGATION ===== */
+        nav {
+            margin: 1.5rem 0;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav ul li a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        nav ul li a:hover,
+        nav ul li a.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(255, 62, 62, 0.3);
+        }
+
+        /* ===== SEARCH & FILTER ===== */
+        .search-filter-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .search-container {
+            position: relative;
+            width: 300px;
+            max-width: 100%;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 0.8rem 1.2rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .search-container input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 2px var(--accent);
+        }
+
+        .search-container input::placeholder {
+            color: var(--text-light);
+        }
+
+        .search-container button {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .filter-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-container label {
+            margin-right: 0.5rem;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .filter-container select {
+            padding: 0.8rem 1rem;
+            border: none;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .filter-container select:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 2px var(--accent);
+        }
+
+        /* ===== MENU ITEMS ===== */
+        main {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .menu-category {
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        .menu-category h2 {
+            font-size: 2.2rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .menu-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .menu-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(255, 62, 62, 0.2);
+            border-color: var(--primary);
+        }
+
+        .menu-item-image {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .menu-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .menu-item:hover .menu-item-image img {
+            transform: scale(1.1);
+        }
+
+        .menu-item-details {
+            padding: 1.8rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            align-items: center;
+        }
+
+        .menu-item-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .menu-item-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+            background: rgba(255, 204, 0, 0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .menu-item-description {
+            color: var(--text-light);
+            margin-bottom: 1.2rem;
+            flex-grow: 1;
+            font-size: 0.95rem;
+        }
+
+        .menu-item-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: auto;
+        }
+
+        .tag {
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .tag.vegetarian {
+            background: rgba(46, 125, 50, 0.2);
+            color: #66bb6a;
+        }
+
+        .tag.vegan {
+            background: rgba(27, 94, 32, 0.2);
+            color: #81c784;
+        }
+
+        .tag.gluten-free {
+            background: rgba(255, 143, 0, 0.2);
+            color: #ffb74d;
+        }
+
+        .tag.spicy {
+            background: rgba(198, 40, 40, 0.2);
+            color: #ef5350;
+        }
+
+        .tag.chef-special {
+            background: rgba(255, 62, 62, 0.2);
+            color: var(--primary);
+            border: 1px dashed var(--primary);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--darker-bg);
+            color: var(--text);
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-content h3 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .footer-content p {
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .social-links {
+            margin: 1.5rem 0;
+        }
+
+        .social-links a {
+            color: var(--text-light);
+            margin: 0 0.8rem;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .logo h1 {
+                font-size: 2.5rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.8rem;
+            }
+
+            nav ul li a {
+                padding: 0.6rem 1.5rem;
+            }
+
+            .menu-items {
+                grid-template-columns: 1fr;
+            }
+
+            .search-filter-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .search-container {
+                width: 100%;
+            }
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .hidden {
+            display: none !important;
+        }
+
+        .delayed-1 {
+            animation-delay: 0.2s !important;
+        }
+
+        .delayed-2 {
+            animation-delay: 0.4s !important;
+        }
+
+        .delayed-3 {
+            animation-delay: 0.6s !important;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Hell's Kitchen</h1>
+            <p>Where passion meets perfection</p>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="#" class="active" data-category="all">All Items</a></li>
+                <li><a href="#" data-category="starters">Starters</a></li>
+                <li><a href="#" data-category="mains">Main Courses</a></li>
+                <li><a href="#" data-category="desserts">Desserts</a></li>
+                <li><a href="#" data-category="drinks">Drinks</a></li>
+            </ul>
+        </nav>
+
+        <div class="search-filter-container">
+            <div class="search-container">
+                <input type="text" id="search" placeholder="Search dishes...">
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="filter-container">
+                <label for="dietary-filter">Filter:</label>
+                <select id="dietary-filter">
+                    <option value="all">All</option>
+                    <option value="vegetarian">Vegetarian</option>
+                    <option value="vegan">Vegan</option>
+                    <option value="gluten-free">Gluten-Free</option>
+                    <option value="spicy">Spicy</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="menu-category" data-category="starters">
+            <h2>Starters</h2>
+            <div class="menu-items">
+                <div class="menu-item" data-tags="vegetarian">
+                    <div class="menu-item-image">
+                        <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Bruschetta">
+                    </div>
+                    <div class="menu-item-details">
+                        <div class="menu-item-header">
+                            <h3 class="menu-item-title">Classic Bruschetta</h3>
+                            <span class="menu-item-price">$9.50</span>
+                        </div>
+                        <p class="menu-item-description">Toasted bread topped with tomatoes, fresh basil, garlic, and extra virgin olive oil.</p>
+                        <div class="menu-item-tags">
+                            <span class="tag vegetarian">Vegetarian</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-tags="spicy">
+                    <div class="menu-item-image">
+                        <img src="https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Spicy Wings">
+                    </div>
+                    <div class="menu-item-details">
+                        <div class="menu-item-header">
+                            <h3 class="menu-item-title">Hell's Spicy Wings</h3>
+                            <span class="menu-item-price">$12.00</span>
+                        </div>
+                        <p class="menu-item-description">Crispy chicken wings tossed in our signature Hell's Fire sauce. Not for the faint-hearted!</p>
+                        <div class="menu-item-tags">
+                            <span class="tag spicy">Spicy</span>
+                            <span class="tag chef-special">Chef Special</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-tags="vegetarian gluten-free">
+                    <div class="menu-item-image">
+                        <img src="https://images.unsplash.com/photo-1546069901-d5bfd2cbfb1f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Salad">
+                    </div>
+                    <div class="menu-item-details">
+                        <div class="menu-item-header">
+                            <h3 class="menu-item-title">Gordon's Garden Salad</h3>
+                            <span class="menu-item-price">$10.50</span>
+                        </div>
+                        <p class="menu-item-description">Fresh mixed greens, cherry tomatoes, cucumber, red onion, and balsamic vinaigrette.</p>
+                        <div class="menu-item-tags">
+                            <span class="tag vegetarian">Vegetarian</span>
+                            <span class="tag gluten-free">Gluten-Free</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="menu-category delayed-1" data-category="mains">
+            <h2>Main Courses</h2>
+            <div class="menu-items">
+                <div class="menu-item" data-tags="gluten-free">
+                    <div class="menu-item-image">
+                        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Beef Wellington">
+                    </div>
+                    <div class="menu-item-details">
+                        <div class="menu-item-header">
+                            <h3 class="menu-item-title">Beef Wellington</h3>
+                            <span class="menu-item-price">$34.00</span>
+                        </div>
+                        <p class="menu-item-description">Prime beef tenderloin wrapped in mushroom duxelles, prosciutto, and puff pastry.</p>
+                        <div class="menu-item-tags">
+                            <span class="tag gluten-free">Gluten-Free</span>
+                            <span class="tag chef-special">Chef Special</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-tags="vegetarian">
+                    <div class="menu-item-image">
+                        <img src="https://images.unsplash.com/photo-1518779578993-ec3579fee39f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Risotto">
+                    </div>
+                    <div class="menu-item-details">
+                        <div class="menu-item-header">
+                            <h3 class="menu-item-title">Wild Mushroom Risotto</h3>
+                            <span class="menu-item-price">$22.50</span>
+                        </div>
+                        <p class="menu-item-description">Creamy Arborio rice cooked with wild mushrooms, white wine, and Parmesan.</p>
+                        <div class="menu-item-tags">
+                            <span class="tag vegetarian">Vegetarian</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-tags="spicy">
+                    <div class="menu-item-image">
+                        <img src="https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Pasta">
+                    </div>
+                    <div class="menu-item-details">
+                        <div class="menu-item-header">
+                            <h3 class="menu-item-title">Devil's Spicy Pasta</h3>
+                            <span class="menu-item-price">$18.00</span>
+                        </div>
+                        <p class="menu-item-description">Spaghetti with chili-infused tomato sauce, garlic, and fresh basil.</p>
+                        <div class="menu-item-tags">
+                            <span class="tag spicy">Spicy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="menu-category delayed-2" data-category="desserts">
+            <h2>Desserts</h2>
+            <div class="menu-items">
+                <div class="menu-item" data-tags="vegetarian">
+                    <div class="menu-item-image">
+                        <img src="https://images.unsplash.com/photo-1571115177098-24ec42ed204d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Chocolate Lava Cake">
+                    </div>
+                    <div class="menu-item-details">
+                        <div class="menu-item-header">
+                            <h3 class="menu-item-title">Molten Chocolate Lava Cake</h3>
+                            <span class="menu-item-price">$11.00</span>
+                        </div>
+                        <p class="menu-item-description">Warm chocolate cake with a gooey center, served with vanilla ice cream.</p>
+                        <div class="menu-item-tags">
+                            <span class="tag vegetarian">Vegetarian</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-tags="vegetarian vegan gluten-free">
+                    <div class="menu-item-image">
+                        <img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Fruit Salad">
+                    </div>
+                    <div class="menu-item-details">
+                        <div class="menu-item-header">
+                            <h3 class="menu-item-title">Seasonal Fruit Salad</h3>
+                            <span class="menu-item-price">$8.50</span>
+                        </div>
+                        <p class="menu-item-description">Fresh seasonal fruits with a honey-lime dressing and mint garnish.</p>
+                        <div class="menu-item-tags">
+                            <span class="tag vegetarian">Vegetarian</span>
+                            <span class="tag vegan">Vegan</span>
+                            <span class="tag gluten-free">Gluten-Free</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-tags="vegetarian">
+                    <div class="menu-item-image">
+                        <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Cheesecake">
+                    </div>
+                    <div class="menu-item-details">
+                        <div class="menu-item-header">
+                            <h3 class="menu-item-title">New York Cheesecake</h3>
+                            <span class="menu-item-price">$10.00</span>
+                        </div>
+                        <p class="menu-item-description">Classic creamy cheesecake with raspberry coulis.</p>
+                        <div class="menu-item-tags">
+                            <span class="tag vegetarian">Vegetarian</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="menu-category delayed-3" data-category="drinks">
+            <h2>Drinks</h2>
+            <div class="menu-items">
+                <div class="menu-item" data-tags="vegetarian vegan gluten-free">
+                    <div class="menu-item-image">
+                        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Mocktail">
+                    </div>
+                    <div class="menu-item-details">
+                        <div class="menu-item-header">
+                            <h3 class="menu-item-title">Hell's Inferno Mocktail</h3>
+                            <span class="menu-item-price">$7.50</span>
+                        </div>
+                        <p class="menu-item-description">Spicy ginger, lime, pineapple, and a hint of chili for a fiery kick.</p>
+                        <div class="menu-item-tags">
+                            <span class="tag spicy">Spicy</span>
+                            <span class="tag chef-special">Chef Special</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-tags="vegetarian vegan gluten-free">
+                    <div class="menu-item-image">
+                        <img src="https://images.unsplash.com/photo-1551029506-0807df4e2031?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Lemonade">
+                    </div>
+                    <div class="menu-item-details">
+                        <div class="menu-item-header">
+                            <h3 class="menu-item-title">Sparkling Citrus Lemonade</h3>
+                            <span class="menu-item-price">$5.50</span>
+                        </div>
+                        <p class="menu-item-description">Freshly squeezed lemons with orange blossom and sparkling water.</p>
+                        <div class="menu-item-tags">
+                            <span class="tag vegetarian">Vegetarian</span>
+                            <span class="tag vegan">Vegan</span>
+                            <span class="tag gluten-free">Gluten-Free</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-item" data-tags="vegetarian vegan gluten-free">
+                    <div class="menu-item-image">
+                        <img src="https://images.unsplash.com/photo-1600271886742-f049cd451bba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Iced Tea">
+                    </div>
+                    <div class="menu-item-details">
+                        <div class="menu-item-header">
+                            <h3 class="menu-item-title">Southern Sweet Iced Tea</h3>
+                            <span class="menu-item-price">$4.50</span>
+                        </div>
+                        <p class="menu-item-description">Classic sweet tea with a touch of mint and lemon.</p>
+                        <div class="menu-item-tags">
+                            <span class="tag vegetarian">Vegetarian</span>
+                            <span class="tag vegan">Vegan</span>
+                            <span class="tag gluten-free">Gluten-Free</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <h3>Hell's Kitchen</h3>
+            <p>123 Restaurant Row, New York, NY 10001</p>
+            <p>Reservations: (212) 555-1234</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+            <p class="copyright">© 2023 Hell's Kitchen. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Category filtering
+            const categoryLinks = document.querySelectorAll('nav a');
+            const menuCategories = document.querySelectorAll('.menu-category');
+            const dietaryFilter = document.getElementById('dietary-filter');
+            const searchInput = document.getElementById('search');
+            const searchBtn = document.getElementById('search-btn');
+
+            // Set initial active category
+            let activeCategory = 'all';
+
+            // Category click handler
+            categoryLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Update active link
+                    categoryLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Get category to show
+                    activeCategory = this.dataset.category;
+                    
+                    // Show/hide categories
+                    menuCategories.forEach(category => {
+                        if (activeCategory === 'all' || category.dataset.category === activeCategory) {
+                            category.classList.remove('hidden');
+                        } else {
+                            category.classList.add('hidden');
+                        }
+                    });
+                    
+                    // Apply dietary filter to visible items
+                    applyDietaryFilter();
+                });
+            });
+
+            // Dietary filter handler
+            dietaryFilter.addEventListener('change', applyDietaryFilter);
+
+            function applyDietaryFilter() {
+                const filterValue = dietaryFilter.value;
+                const visibleCategories = activeCategory === 'all' 
+                    ? document.querySelectorAll('.menu-category') 
+                    : document.querySelectorAll(`.menu-category[data-category="${activeCategory}"]`);
+                
+                visibleCategories.forEach(category => {
+                    const items = category.querySelectorAll('.menu-item');
+                    
+                    items.forEach(item => {
+                        const tags = item.dataset.tags.split(' ');
+                        
+                        if (filterValue === 'all' || tags.includes(filterValue)) {
+                            item.style.display = 'flex';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            // Search functionality
+            function performSearch() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const visibleCategories = activeCategory === 'all' 
+                    ? document.querySelectorAll('.menu-category:not(.hidden)') 
+                    : document.querySelectorAll(`.menu-category[data-category="${activeCategory}"]:not(.hidden)`);
+                
+                if (searchTerm === '') {
+                    // Show all items in visible categories
+                    visibleCategories.forEach(category => {
+                        const items = category.querySelectorAll('.menu-item');
+                        items.forEach(item => {
+                            if (item.style.display !== 'none') {
+                                item.style.display = 'flex';
+                            }
+                        });
+                    });
+                    return;
+                }
+                
+                visibleCategories.forEach(category => {
+                    const items = category.querySelectorAll('.menu-item');
+                    
+                    items.forEach(item => {
+                        const title = item.querySelector('.menu-item-title').textContent.toLowerCase();
+                        const description = item.querySelector('.menu-item-description').textContent.toLowerCase();
+                        
+                        if ((title.includes(searchTerm) || description.includes(searchTerm)) && item.style.display !== 'none') {
+                            item.style.display = 'flex';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            // Animation on scroll
+            const animateOnScroll = function() {
+                const elements = document.querySelectorAll('.menu-category');
+                
+                elements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    
+                    if (elementPosition < windowHeight - 100) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            };
+
+            window.addEventListener('scroll', animateOnScroll);
+            animateOnScroll(); // Run once on load
+        });
+    </script>
+</body>
+</html>
