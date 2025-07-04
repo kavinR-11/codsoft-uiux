@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELITE MINIATURES | Premium 1:16 Scale Cars</title>
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --metal: #1a1a1a;
+            --gold: #d4af37;
+            --white: #f0f0f0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--black);
+            color: var(--white);
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        body.loaded {
+            opacity: 1;
+        }
+
+        /* Navigation */
+        .desktop-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background-color: rgba(10, 10, 10, 0.9);
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .desktop-nav.scrolled {
+            padding: 15px 50px;
+            background-color: rgba(10, 10, 10, 0.95);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--gold);
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: relative;
+        }
+
+        .search-bar {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: none;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            transition: all 0.3s ease;
+            width: 200px;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            width: 250px;
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1583&q=80') no-repeat center center/cover;
+            transition: all 0.5s ease;
+        }
+
+        .hero-content {
+            max-width: 600px;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+
+        .hero.loaded .hero-content {
+            transform: translateY(0);
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--gold);
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* Button Styles */
+        .cta-button {
+            background-color: var(--gold);
+            color: var(--black);
+            padding: 12px 30px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .cta-button:hover {
+            background-color: var(--white);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Products Section */
+        .products {
+            padding: 100px 10%;
+            background-color: var(--black);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 32px;
+            color: var(--gold);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: all 0.8s ease;
+        }
+
+        .section-title.loaded {
+            opacity: 1;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 2px;
+            background-color: var(--gold);
+            bottom: -10px;
+            left: 25%;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background-color: var(--metal);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .product-card.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--gold);
+            color: var(--black);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: all 0.5s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover .product-title {
+            color: var(--gold);
+        }
+
+        .product-price {
+            color: var(--gold);
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .add-to-cart {
+            background-color: transparent;
+            color: var(--gold);
+            padding: 10px 20px;
+            border: 1px solid var(--gold);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            border-radius: 4px;
+        }
+
+        .add-to-cart:hover {
+            background-color: var(--gold);
+            color: var(--black);
+        }
+
+        /* Shopping Cart */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background-color: var(--metal);
+            transition: right 0.3s ease;
+            padding: 30px;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .cart-sidebar.active {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .cart-header h2 {
+            color: var(--gold);
+            margin: 0;
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-cart:hover {
+            color: var(--gold);
+            transform: rotate(90deg);
+        }
+
+        .cart-items {
+            margin-bottom: 30px;
+        }
+
+        .cart-item {
+            display: flex;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            gap: 15px;
+        }
+
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+
+        .cart-item-price {
+            color: var(--gold);
+            margin: 0 0 10px 0;
+        }
+
+        .remove-item {
+            background: none;
+            border: none;
+            color: #ff4d4d;
+            cursor: pointer;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .total-price {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .checkout-btn {
+            background-color: var(--gold);
+            color: var(--black);
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .checkout-btn:hover {
+            background-color: var(--white);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 50px 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .no-results.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="desktop-nav">
+        <div class="logo">ELITE MINIATURES</div>
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="#collections">Collections</a>
+                <a href="#craftsmanship">Craftsmanship</a>
+                <a href="#limited">Limited Editions</a>
+                <a href="#about">About</a>
+            </div>
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="Search models...">
+            </div>
+            <button class="cta-button cart-btn">Cart (<span class="cart-count">0</span>)</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Precision Miniature Masterpieces</h1>
+            <p>Discover our exclusive collection of 1:16 scale handcrafted automotive replicas, each requiring over 200 hours of artisan craftsmanship.</p>
+            <button class="cta-button">View Collection</button>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products" id="collections">
+        <h2 class="section-title">Featured Collections</h2>
+        <div class="product-grid" id="product-grid">
+            <!-- Products will be loaded here by JavaScript -->
+        </div>
+        <div class="no-results" id="no-results">
+            <h3>No models found</h3>
+            <p>Try adjusting your search criteria</p>
+        </div>
+    </section>
+
+    <!-- Shopping Cart -->
+    <div class="overlay" id="overlay"></div>
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2>Your Collection</h2>
+            <button class="close-cart" id="close-cart">×</button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <!-- Cart items will be added here -->
+        </div>
+        <div class="cart-total">
+            <span>Total:</span>
+            <span class="total-price" id="total-price">$0.00</span>
+        </div>
+        <button class="checkout-btn">Proceed to Checkout</button>
+    </div>
+
+    <script>
+        // Page Load Transition
+        window.addEventListener('load', function() {
+            document.body.classList.add('loaded');
+            document.querySelector('.hero').classList.add('loaded');
+            
+            // Animate section titles
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('loaded');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.section-title, .product-card').forEach(el => {
+                observer.observe(el);
+            });
+        });
+
+        // Navigation Scroll Effect
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                document.querySelector('.desktop-nav').classList.add('scrolled');
+            } else {
+                document.querySelector('.desktop-nav').classList.remove('scrolled');
+            }
+        });
+
+        // Product Data
+        const products = [
+            {
+                id: 1,
+                name: "Ferrari 250 GTO",
+                price: 1299.00,
+                image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                badge: "Limited"
+            },
+            {
+                id: 2,
+                name: "Porsche 911 RS",
+                price: 1199.00,
+                image: "https://images.unsplash.com/photo-1494905998402-395d579af36f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                badge: ""
+            },
+            {
+                id: 3,
+                name: "Lamborghini Countach",
+                price: 1499.00,
+                image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                badge: "New"
+            },
+            {
+                id: 4,
+                name: "Jaguar E-Type",
+                price: 1099.00,
+                image: "https://images.unsplash.com/photo-1600861195091-690c92f1d2cc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                badge: ""
+            },
+            {
+                id: 5,
+                name: "Aston Martin DB5",
+                price: 1399.00,
+                image: "https://images.unsplash.com/photo-1621252179027-94459d8fadf4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                badge: "Classic"
+            },
+            {
+                id: 6,
+                name: "Bugatti Chiron",
+                price: 1599.00,
+                image: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                badge: ""
+            },
+            {
+                id: 7,
+                name: "Mercedes 300SL",
+                price: 1299.00,
+                image: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                badge: "Gullwing"
+            },
+            {
+                id: 8,
+                name: "Ford GT40",
+                price: 1399.00,
+                image: "https://images.unsplash.com/photo-1619682817481-e994891cd1f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                badge: "Limited"
+            },
+            {
+                id: 9,
+                name: "Chevrolet Corvette",
+                price: 999.00,
+                image: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                badge: ""
+            },
+            {
+                id: 10,
+                name: "McLaren F1",
+                price: 1699.00,
+                image: "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                badge: "Rare"
+            }
+        ];
+
+        // Cart System
+        let cart = [];
+
+        // Render Products
+        function renderProducts(productsToRender) {
+            const productGrid = document.getElementById('product-grid');
+            productGrid.innerHTML = '';
+            
+            if (productsToRender.length === 0) {
+                document.getElementById('no-results').classList.add('loaded');
+                return;
+            } else {
+                document.getElementById('no-results').classList.remove('loaded');
+            }
+            
+            productsToRender.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="product-price">$${product.price.toFixed(2)}</p>
+                        <button class="add-to-cart" data-id="${product.id}">Add to Collection</button>
+                    </div>
+                `;
+                productGrid.appendChild(productCard);
+                
+                // Observe for animations
+                new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('loaded');
+                        }
+                    });
+                }, { threshold: 0.1 }).observe(productCard);
+            });
+            
+            // Add event listeners to new buttons
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', addToCart);
+            });
+        }
+
+        // Add to Cart Function
+        function addToCart(e) {
+            const productId = parseInt(e.target.getAttribute('data-id'));
+            const product = products.find(p => p.id === productId);
+            
+            // Check if product already in cart
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({
+                    ...product,
+                    quantity: 1
+                });
+            }
+            
+            // Update cart UI
+            updateCart();
+            
+            // Button feedback
+            e.target.textContent = 'Added!';
+            setTimeout(() => {
+                e.target.textContent = 'Add to Collection';
+            }, 1000);
+        }
+
+        // Update Cart UI
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            const cartCount = document.querySelector('.cart-count');
+            const totalPrice = document.getElementById('total-price');
+            
+            cartItems.innerHTML = '';
+            let total = 0;
+            let count = 0;
+            
+            cart.forEach(item => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <h3 class="cart-item-title">${item.name}</h3>
+                        <p class="cart-item-price">$${item.price.toFixed(2)} × ${item.quantity}</p>
+                        <button class="remove-item" data-id="${item.id}">Remove</button>
+                    </div>
+                `;
+                cartItems.appendChild(cartItem);
+                
+                total += item.price * item.quantity;
+                count += item.quantity;
+            });
+            
+            // Update totals
+            cartCount.textContent = count;
+            totalPrice.textContent = `$${total.toFixed(2)}`;
+            
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', removeFromCart);
+            });
+        }
+
+        // Remove from Cart
+        function removeFromCart(e) {
+            const productId = parseInt(e.target.getAttribute('data-id'));
+            cart = cart.filter(item => item.id !== productId);
+            updateCart();
+        }
+
+        // Search Functionality
+        document.querySelector('.search-bar').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredProducts = products.filter(product => 
+                product.name.toLowerCase().includes(searchTerm)
+            );
+            renderProducts(filteredProducts);
+        });
+
+        // Cart Toggle
+        document.querySelector('.cart-btn').addEventListener('click', function() {
+            document.getElementById('cart-sidebar').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        });
+
+        document.getElementById('close-cart').addEventListener('click', function() {
+            document.getElementById('cart-sidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        });
+
+        document.getElementById('overlay').addEventListener('click', function() {
+            document.getElementById('cart-sidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        });
+
+        // Initialize
+        renderProducts(products);
+    </script>
+</body>
+</html>
